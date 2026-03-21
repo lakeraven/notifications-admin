@@ -1,3 +1,6 @@
+{% set is_about_page = request.path.startswith('/about') %}
+{% set is_information_section = not current_user.is_authenticated and (is_about_page or request.path.startswith('/features') or request.path.startswith('/using-notify') or request.path == '/') %}
+
 {% if current_user.is_authenticated %}
   {% set navigation = [
     {"href": url_for("main.show_accounts_or_dashboard"), "text": "Current service", "active": request.path.startswith('/accounts') or request.path.startswith('/services') or request.path.startswith('/activity/services') or request.path.startswith('/user-profile')},
@@ -62,6 +65,14 @@
           {% endif %}
           {% endfor %}
         </ul>
+        {% if not current_user.is_authenticated and is_information_section%}
+        <div class="usa-nav__login">
+          <a class="usa-button usa-button login-button login-button--primary margin-right-2"
+            href="{{ initial_signin_url }}">Sign
+            in with <img src="{{ asset_url('images/logo-login.svg') }}" alt="Login.gov logo">
+          </a>
+        </div>
+        {% endif %}
         <div class="usa-nav__secondary">
           <ul class="usa-nav__secondary-links">
             {% if secondaryNavigation %}
