@@ -37,11 +37,11 @@ services:
       - key: ADMIN_CLIENT_SECRET
         sync: false
       - key: ADMIN_CLIENT_USERNAME
-        sync: false
+        value: notify-admin
       - key: API_HOST_NAME
-        sync: false
+        value: https://notify-api-vuvr.onrender.com
       - key: ADMIN_BASE_URL
-        sync: false
+        value: https://notify-admin.onrender.com
       - key: REDIS_URL
         fromService:
           name: notify-admin-redis
