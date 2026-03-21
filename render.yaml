@@ -41,7 +41,10 @@ services:
       - key: ADMIN_BASE_URL
         sync: false
       - key: REDIS_URL
-        sync: false
+        fromService:
+          name: notify-admin-redis
+          type: keyvalue
+          property: connectionString
       - key: LOGIN_PEM
         sync: false
       - key: LOGIN_DOT_GOV_CLIENT_ID
@@ -68,3 +71,12 @@ services:
         value: us-west-2
       - key: CSV_BUCKET_NAME
         sync: false
+
+  - type: keyvalue
+    name: notify-admin-redis
+    plan: starter
+    region: oregon
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: everywhere
+    maxmemoryPolicy: allkeys-lru
