@@ -1,0 +1,84 @@
+services:
+  - type: web
+    name: notify-admin
+    runtime: python
+    plan: starter
+    region: oregon
+    buildCommand: pip install poetry && poetry install --only main && make generate-version-file && npm ci --no-audit && npm run build
+    startCommand: poetry run gunicorn -c gunicorn_config.py gunicorn_entry:application
+    healthCheckPath: /_status?simple=true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.2
+      - key: RENDER
+        value: "true"
+      - key: FLASK_APP
+        value: application.py
+      - key: FLASK_DEBUG
+        value: "false"
+      - key: PORT
+        value: "10000"
+      - key: NOTIFY_APP_NAME
+        value: admin
+      - key: NOTIFY_ENVIRONMENT
+        value: production
+      - key: ADMIN_BETA_HOST
+        value: notify-admin.onrender.com
+      - key: NOTIFY_LOG_LEVEL
+        value: INFO
+      - key: REDIS_ENABLED
+        value: "1"
+      - key: NOTIFY_BILLING_DETAILS
+        value: "[]"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DANGEROUS_SALT
+        generateValue: true
+      - key: ADMIN_CLIENT_SECRET
+        sync: false
+      - key: ADMIN_CLIENT_USERNAME
+        value: notify-admin
+      - key: API_HOST_NAME
+        value: https://notify-api-vuvr.onrender.com
+      - key: ADMIN_BASE_URL
+        value: https://notify-admin.onrender.com
+      - key: REDIS_URL
+        fromService:
+          name: notify-admin-redis
+          type: keyvalue
+          property: connectionString
+      - key: LOGIN_PEM
+        sync: false
+      - key: LOGIN_DOT_GOV_CLIENT_ID
+        sync: false
+      - key: LOGIN_DOT_GOV_USER_INFO_URL
+        sync: false
+      - key: LOGIN_DOT_GOV_ACCESS_TOKEN_URL
+        sync: false
+      - key: LOGIN_DOT_GOV_LOGOUT_URL
+        sync: false
+      - key: LOGIN_DOT_GOV_BASE_LOGOUT_URL
+        sync: false
+      - key: LOGIN_DOT_GOV_SIGNOUT_REDIRECT
+        sync: false
+      - key: LOGIN_DOT_GOV_INITIAL_SIGNIN_URL
+        sync: false
+      - key: LOGIN_DOT_GOV_CERTS_URL
+        sync: false
+      - key: CSV_AWS_ACCESS_KEY_ID
+        sync: false
+      - key: CSV_AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: CSV_AWS_REGION
+        value: us-west-2
+      - key: CSV_BUCKET_NAME
+        sync: false
+
+  - type: keyvalue
+    name: notify-admin-redis
+    plan: starter
+    region: oregon
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: everywhere
+    maxmemoryPolicy: allkeys-lru
