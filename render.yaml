@@ -6,7 +6,7 @@ services:
     region: oregon
     buildCommand: pip install poetry && poetry install --only main && make generate-version-file
     startCommand: poetry run gunicorn -c gunicorn_config.py gunicorn_entry:application
-    healthCheckPath: /_status
+    healthCheckPath: /_status?simple=true
     envVars:
       - key: PYTHON_VERSION
         value: 3.13.2
