@@ -4,7 +4,7 @@ services:
     runtime: python
     plan: starter
     region: oregon
-    buildCommand: pip install poetry && poetry install --only main && make generate-version-file
+    buildCommand: pip install poetry && poetry install --only main && make generate-version-file && npm ci --no-audit && npm run build
     startCommand: poetry run gunicorn -c gunicorn_config.py gunicorn_entry:application
     healthCheckPath: /_status?simple=true
     envVars:
