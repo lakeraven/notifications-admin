@@ -425,9 +425,10 @@ def make_session_permanent():
 def create_beta_url(url):
     url_created = None
     try:
+        beta_host = current_app.config.get("ADMIN_BETA_HOST", "beta.notify.gov")
         url_created = urlparse(url)
         url_list = list(url_created)
-        url_list[1] = "beta.notify.gov"
+        url_list[1] = beta_host
         url_for_redirect = urlunparse(url_list)
         return url_for_redirect
     except ValueError:
@@ -443,9 +444,10 @@ def create_beta_url(url):
 
 
 def redirect_notify_to_beta():
+    beta_host = current_app.config.get("ADMIN_BETA_HOST", "beta.notify.gov")
     if (
         current_app.config["NOTIFY_ENVIRONMENT"] == "production"
-        and "beta.notify.gov" not in request.url
+        and beta_host not in request.url
     ):
         # TODO add debug here to trace what is going on with the URL for the 'RequestContext' error
         url_to_beta = create_beta_url(request.url)
