@@ -15,6 +15,7 @@ class Config(object):
     API_PUBLIC_URL = getenv("API_PUBLIC_URL", "localhost")
 
     ADMIN_BASE_URL = getenv("ADMIN_BASE_URL", "http://localhost:6012")
+    ADMIN_BETA_HOST = getenv("ADMIN_BETA_HOST", "beta.notify.gov")
     HEADER_COLOUR = "#81878b"  # mix of dark-grey and mid-grey
     LOGO_CDN_DOMAIN = "static-logos.notifications.example.gov"  # TODO use our own CDN
 
